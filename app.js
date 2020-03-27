@@ -2,7 +2,7 @@ import express from 'express';
 import body_parser from 'body-parser'
 import multer from 'multer';
 import mongoose from 'mongoose';
-import { createUser, getDetails } from './helpers/dbops.mjs';
+import { createUser, getDetails, updateDetails } from './helpers/dbops.mjs';
 
 mongoose.connect('mongodb://localhost/test', {
   useNewUrlParser: true,
@@ -18,7 +18,6 @@ var storage = multer.diskStorage({
     }
   });
 var upload = multer({ dest: 'uploads/', storage: storage });
-
 var app = express();
 app.use(express.json());
 app.use(body_parser.urlencoded({extended: false}))
@@ -44,13 +43,15 @@ app.post('/data', (req, res) => {
         };
       res.send(JSON.stringify(response));
     });
-        
-    /*res.format({  
-        'application/json': function(){  
-          res.send(JSON.stringify(response));  
-        }
-    });  */
-    
+});
+
+app.post('/writedb', (req, res) => {
+  console.log(req.body);
+  var username = req.body.state.username;
+  var filePath = '~/UndangerServer/uploads/' + username + '-file.wav';
+  var emergency = req.body.state.emergency;
+  var response = updateDetails(username, {recordingLocation: filePath, emergency: emergency});
+  res.send(JSON.stringify(response));
 });
 
 app.post('/upload', upload.single('file'), (req, res, next) => {

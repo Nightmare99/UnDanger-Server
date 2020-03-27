@@ -20,13 +20,13 @@ export const UserSchema = mongoose.Schema({
     recordingLocation: {
         type: String,
     },
-    emergency: {
+    emergency: [{
         name: {
             type: String,
         },
-        phno: {
+        phone: {
             type: String,
         },
-    },
+    }],
 })
 export var User = mongoose.model('User', UserSchema)
