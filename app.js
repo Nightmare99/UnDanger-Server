@@ -1,6 +1,14 @@
 import express from 'express';
 import body_parser from 'body-parser'
 import multer from 'multer';
+import mongoose from 'mongoose';
+import { createUser, getDetails } from './helpers/dbops.mjs';
+
+mongoose.connect('mongodb://localhost/test', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads')
@@ -22,15 +30,27 @@ app.get('/test', (req, res) => {
 
 app.post('/data', (req, res) => {
     console.log(req.body);
-    var response = {  
-        first_name: 'test',  
-        last_name: 'data'  
-    };  
-    res.format({  
+    var uname = req.body.username;
+    var pword = req.body.password;
+    console.log(uname);
+    getDetails(uname).then((pass) => {
+      console.log(pword + " " + pass);
+      if (pass == pword)
+        var response = {  
+            message: 'success',  
+        };
+      else var response = {  
+        message: 'failed',  
+        };
+      res.send(JSON.stringify(response));
+    });
+        
+    /*res.format({  
         'application/json': function(){  
           res.send(JSON.stringify(response));  
         }
-    });  //res.send(JSON.stringify(response));
+    });  */
+    
 });
 
 app.post('/upload', upload.single('file'), (req, res, next) => {
