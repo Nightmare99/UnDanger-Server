@@ -6,19 +6,20 @@ mongoose.connect('mongodb://localhost/test', {
   useUnifiedTopology: true
 });
 
-export function createUser(username, password, email) {
+export async function createUser(username, password, email) {
     const me = new User({
         email: email,
         username: username,
         password: password,
-        recordingLocation: '',
-        emergency: [{
-            name: 'NULL',
-            phno: '69420',
-        }], 
     });
-    me.save().then(() => console.log('user added'))
-            .catch((err) => console.log('user already exists'));
+    try {
+        await me.save();
+        return 'success';
+    }
+    catch(err) { 
+        var error = Object.keys(err.keyPattern)[0] + ' exists';
+        return error; 
+    }
 }
 
 export function updateDetails(username, fields) {
@@ -38,7 +39,7 @@ export async function getDetails(username) {
     try {
         var user = await User.findOne({ username: username });
         console.log(user.password);
-        return  user.password;
+        return user.password;
     }
     catch(err) {
         console.log(err);

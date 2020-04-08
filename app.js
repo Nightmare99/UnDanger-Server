@@ -27,7 +27,31 @@ app.get('/test', (req, res) => {
     res.end();
 });
 
-app.post('/data', (req, res) => {
+app.post('/register', (req, res) => {
+  console.log(req.body);
+  var uname = req.body.username;
+  var pword = req.body.password;
+  var email = req.body.email;
+  createUser(uname, pword, email).then((result) => {
+    console.log(result);
+    if (result == 'success')
+      var response = {  
+          message: 'success',  
+      };
+    else if (result == 'email exists')
+      var response = {  
+        message: 'email exists',  
+      };
+    else 
+      var response = {  
+        message: 'username exists',  
+      };
+    console.log(response);
+    res.send(JSON.stringify(response));
+  });
+});
+
+app.post('/login', (req, res) => {
     console.log(req.body);
     var uname = req.body.username;
     var pword = req.body.password;
