@@ -1,6 +1,6 @@
  # UnDanger Server
  Made using ExpressJS and MongoDB.
- Only one type of user - can create courses as well as enroll in courses. Similar to Google Classrooms.
+ Web server to handle requests from the UnDanger mobile app.
  ## Dependencies
  - NodeJS
  - NPM
